@@ -14,7 +14,7 @@ class MinHeap
   end
 
   # This method adds a HeapNode instance to the heap
-   # Time Complexity: O(logn)
+  # Time Complexity: O(logn)
   # Space Complexity: O(1)
   def add(key, value = key)
     @store.push(HeapNode.new(key, value))
@@ -24,10 +24,14 @@ class MinHeap
 
   # This method removes and returns an element from the heap
   #   maintaining the heap structure
-  # Time Complexity: ?
-  # Space Complexity: ?
+  # Time Complexity: O(logn)
+  # Space Complexity: O(1)
   def remove()
-    raise NotImplementedError, "Method not implemented yet..."
+    return if empty?
+    swap(0, @store.length - 1)
+    removed_element = @store.pop
+    heap_down(0)
+    return removed_element.value
   end
 
 
@@ -49,7 +53,7 @@ class MinHeap
   # Time complexity: ?
   # Space complexity: ?
   def empty?
-    raise NotImplementedError, "Method not implemented yet..."
+    return @store[0].nil?
   end
 
   private
@@ -57,7 +61,7 @@ class MinHeap
   # This helper method takes an index and
   #  moves it up the heap, if it is less than it's parent node.
   #  It could be **very** helpful for the add method.
-   # Time complexity: O(logn)
+  # Time complexity: O(logn)
   # Space complexity: O(1)
   def heap_up(index)
     parent_i = (index - 1) / 2
@@ -74,10 +78,33 @@ class MinHeap
   end
 
   # This helper method takes an index and 
-  #  moves it up the heap if it's smaller
-  #  than it's parent node.
+  # moves it up the heap if it's smaller
+  # than it's parent node.
   def heap_down(index)
-    raise NotImplementedError, "Method not implemented yet..."
+    while index < @store.length
+      left_i = index * 2 + 1
+      right_i = index * 2 + 2
+      child_index = nil
+      left = @store[left_i]
+      right = @store[right_i]
+
+      if left && right
+        child_index = left.key < right.key ? left_i : right_i
+        if @store[child_index].key < @store[index].key
+          swap(index, child_index)
+          index = child_index
+        else
+          return
+        end
+      elsif left && !right
+        return unless left.key < @store[index].key
+        child_index = left_i
+        swap(index, child_index)
+        index = child_index
+      else
+        return
+      end
+    end
   end
 
   # If you want a swap method... you're welcome
